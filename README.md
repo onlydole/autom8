@@ -1,5 +1,7 @@
 # AUTOM8 - A Taylor Dolezal Project
 
+[![Circle CI](https://circleci.com/gh/onlydole/autom8.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/onlydole/autom8)
+
 ## Background
 
 This project was created as a deep dive into using Hashicorp's Terraform to instantiate AWS instances and infrastructure, and to use Ansible as a configuration management solution to provision the created EC2 instances and then deploy a simple HTML page.
