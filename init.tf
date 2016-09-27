@@ -65,7 +65,6 @@ resource "aws_instance" "webserver-02" {
 
 # Webserver Load Balancer
 resource "aws_elb" "load-balancer" {
-  name = "autom8-elb"
   availability_zones = ["${aws_instance.webserver-01.availability_zone}"]
 
   listener {
@@ -89,10 +88,6 @@ resource "aws_elb" "load-balancer" {
   connection_draining = true
   connection_draining_timeout = 400
   security_groups = ["${aws_security_group.allow_http.id}"]
-
-  tags {
-    Name = "autom8-elb"
-  }
 }
 
 # Outputs for configuration management step
