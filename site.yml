@@ -1,0 +1,17 @@
+---
+- name: Nginx Configuration and Deployment Process
+  hosts: all
+  become: true
+  tasks:
+
+  - name: Install Nginx and dependencies
+    apt: "name={{ item }} update_cache=yes state=latest"
+    with_items:
+      - python-setuptools
+      - nginx
+
+  - name: Restart Nginx service
+    service: name=nginx state=restarted enabled=yes
+
+  - name: Copy over HTML file to Nginx host location
+    copy: "src=web/index.html dest=/usr/share/nginx/html/index.html"
