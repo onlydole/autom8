@@ -4,3 +4,14 @@ machine:
 dependencies:
   pre:
     - pip install ansible
+    - wget https://releases.hashicorp.com/terraform/0.7.4/terraform_0.7.4_linux_amd64.zip
+    - unzip terraform_0.7.4_linux_amd64.zip
+test:
+  override:
+    - ./terraform plan
+deploy:
+  production:
+    branch: master
+    commands:
+      - ./terraform apply
+      - ansible-playbook site.yml
