@@ -1,3 +1,8 @@
+# Terraform artifacts
 *.tfvars
 *.tfstate
 *.backup
+
+# Ansible artifacts
+nginx-hosts
+*.retry
