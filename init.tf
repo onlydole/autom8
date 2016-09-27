@@ -4,6 +4,18 @@ provider "aws" {
   region = "${var.region}"
 }
 
+# SSH Security Group - Port 22
+resource "aws_security_group" "allow_ssh" {
+  description = "Allow all SSH traffic"
+
+  ingress {
+      from_port = 22
+      to_port = 22
+      protocol = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 # HTTP Security Group - Port 80
 resource "aws_security_group" "allow_http" {
   description = "Allow all HTTP traffic"
@@ -14,6 +26,13 @@ resource "aws_security_group" "allow_http" {
       protocol = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
   }
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 # Webserver - 01
@@ -21,9 +40,12 @@ resource "aws_instance" "webserver-01" {
   ami = "${lookup(var.amis, var.region)}"
   instance_type = "t2.micro"
   key_name = "${var.ssh_key_name}"
-  security_groups = ["${aws_security_group.allow_http.name}"]
+  security_groups = ["${aws_security_group.allow_http.name}","${aws_security_group.allow_ssh.name}"]
   tags {
     ApplicationType = "nginx"
+  }
+  provisioner "local-exec" {
+    command = "echo ${aws_instance.webserver-01.public_ip} >> nginx-hosts"
   }
 }
 
@@ -32,9 +54,12 @@ resource "aws_instance" "webserver-02" {
   ami = "${lookup(var.amis, var.region)}"
   instance_type = "t2.micro"
   key_name = "${var.ssh_key_name}"
-  security_groups = ["${aws_security_group.allow_http.name}"]
+  security_groups = ["${aws_security_group.allow_http.name}","${aws_security_group.allow_ssh.name}"]
   tags {
     ApplicationType = "nginx"
+  }
+  provisioner "local-exec" {
+    command = "echo ${aws_instance.webserver-02.public_ip} >> nginx-hosts"
   }
 }
 
