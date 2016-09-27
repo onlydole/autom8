@@ -1,7 +1,7 @@
 provider "aws" {
   access_key = "${var.access_key}"
   secret_key = "${var.secret_key}"
-  region     = "${var.region}"
+  region = "${var.region}"
 }
 
 # HTTP Security Group - Port 80
@@ -20,16 +20,22 @@ resource "aws_security_group" "allow_http" {
 resource "aws_instance" "webserver-01" {
   ami = "${lookup(var.amis, var.region)}"
   instance_type = "t2.micro"
-  key_name = "terraform"
+  key_name = "${var.ssh_key_name}"
   security_groups = ["${aws_security_group.allow_http.name}"]
+  tags {
+    ApplicationType = "nginx"
+  }
 }
 
 # Webserver - 02
 resource "aws_instance" "webserver-02" {
   ami = "${lookup(var.amis, var.region)}"
   instance_type = "t2.micro"
-  key_name = "terraform"
+  key_name = "${var.ssh_key_name}"
   security_groups = ["${aws_security_group.allow_http.name}"]
+  tags {
+    ApplicationType = "nginx"
+  }
 }
 
 # Webserver Load Balancer

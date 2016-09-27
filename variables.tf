@@ -3,6 +3,8 @@ variable "secret_key" {}
 variable "region" {
   default = "us-east-1"
 }
+variable "ssh_key_name" {}
+variable "ssh_key_path" {}
 variable "amis" {
   type = "map"
   default = {
